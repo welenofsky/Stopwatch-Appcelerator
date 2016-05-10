@@ -25,6 +25,9 @@ var label = Ti.UI.createLabel({
 	}
 });
 
+timeView.add(label);
+win.add(timeView);
+
 var Stopwatch = require('stopwatch');
 var stopWatch = new Stopwatch(stopwatchListener, 10);
 
@@ -64,17 +67,47 @@ var buttonStopReset = Ti.UI.createButton({
      }
 });
 
-timeView.add(label);
-win.add(timeView);
 buttonsView.add(buttonStopReset);
 buttonsView.add(buttonStartLap);
 win.add(buttonsView);
 
+var table = Ti.UI.createTableView({
+	width: '100%',
+	height: Ti.UI.FILL,
+	backgroundColor: '#C0BFBF'	
+});
+
+win.add(table);
+
+var isRunning = false;
 buttonStartLap.addEventListener('click', function(e) {
+	if(isRunning) {
+		// If the timer is running, we add a new lap
+		var row = Ti.UI.createTableViewRow({
+			title: stopWatch.toString(),
+			color: '#404040',
+			// Classname must be same for all of type
+			// is for performance for table rows
+			className: 'lap',
+			leftImage: '/images/lap.png',
+			font: {
+				fontSize: '24sp',
+				fontWeight: 'bold'
+			}
+		});
+		table.appendRow(row);
+	} else {
+		// Otherwise we start the clock
+		isRunning = true;
+		buttonStartLap.title = 'LAP!';
+		buttonStopReset.title = 'STOP';
+		stopWatch.start();
+	}
 	stopWatch.start();
 });
 
 buttonStopReset.addEventListener('click', function(e) {
+	isRunning = false;
 	stopWatch.stop();
 	label.text = 'READY?';
 });
