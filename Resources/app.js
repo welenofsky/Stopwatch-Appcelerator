@@ -107,9 +107,17 @@ buttonStartLap.addEventListener('click', function(e) {
 });
 
 buttonStopReset.addEventListener('click', function(e) {
+	if(isRunning) {
+		buttonStartLap.title = 'GO!';
+		buttonStopReset.title = 'RESET';
+		stopWatch.stop();
+		isRunning = false;
+	} else {
+		table.setData([]);
+		stopWatch.reset();
+		label.text = 'READY';
+	}
 	isRunning = false;
-	stopWatch.stop();
-	label.text = 'READY?';
 });
 
 win.open();
